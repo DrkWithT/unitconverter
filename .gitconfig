@@ -1,0 +1,3 @@
+# treat compiled java files as binary
+*.class binary
+*.jar binary
