@@ -27,6 +27,9 @@ public class App extends JFrame implements ActionListener {
   private static final String DEFAULT_UNIT = "m";
   private static final String[] UNIT_NAMES = {"m", "km", "dm", "cm", "mm", "ft", "mi", "yd", "in"};
 
+  private static final int UNIT_MENU_1 = 0;
+  private static final int UNIT_MENU_2 = 1;
+
   // state
   private boolean[] menuUsageFlags;
 
@@ -55,8 +58,8 @@ public class App extends JFrame implements ActionListener {
   public App() {
     // initialize state
     menuUsageFlags = new boolean[2];
-    menuUsageFlags[0] = false;
-    menuUsageFlags[1] = false;
+    menuUsageFlags[UNIT_MENU_1] = false;
+    menuUsageFlags[UNIT_MENU_2] = false;
 
     // initialize form components
     sourceUnitLabel = new JLabel("m");
@@ -143,6 +146,44 @@ public class App extends JFrame implements ActionListener {
       menuUsageFlags[menuNumber] = !menuUsageFlags[menuNumber];
   }
 
+  private void resetUnitMenuFlags() {
+    menuUsageFlags[0] = false;
+    menuUsageFlags[1] = false;
+  }
+
+  private String findMenuItemText(int menuNumber, JMenuItem unitItem) {
+    String sourceText = unitItem.getText();
+    String targetText = "";
+
+    if (menuNumber == UNIT_MENU_1) {
+      for (int i = 0; i < UNIT_COUNT; i++) {
+        targetText = sourceUnitItems[i].getText();
+
+        if (targetText == sourceText)
+          break;
+      }
+    } else if (menuNumber == UNIT_MENU_2) {
+      for (int i = 0; i < UNIT_COUNT; i++) {
+        targetText = targetUnitItems[i].getText();
+        
+        if (targetText == sourceText)
+          break;
+      }
+    }
+
+    return targetText;
+  }
+
+  private void updateUnitLabel(JMenuItem unitItem) {
+    if (isUsingUnitMenu(UNIT_MENU_1)) {
+      sourceUnitLabel.setText(findMenuItemText(UNIT_MENU_1, unitItem));
+    } else if (isUsingUnitMenu(UNIT_MENU_2)) {
+      targetUnitLabel.setText(findMenuItemText(UNIT_MENU_2, unitItem));
+    }
+
+    resetUnitMenuFlags();
+  }
+
   /**
    * This is a helper method for validation prior to calculations!
    * @implSpec The inputs must be non-negative decimal literals.
@@ -185,8 +226,14 @@ public class App extends JFrame implements ActionListener {
         convertValues();
       else if (eventTarget == resetItem)
         resetValues();
+      else if (eventTarget == sourceUnitMenu)
+        toggleUnitMenuFlag(UNIT_MENU_1);
+      else if (eventTarget == targetUnitMenu)
+        toggleUnitMenuFlag(UNIT_MENU_2);
       else if (eventTarget.getClass().getName() == "javax.swing.JMenuItem")
-        ;
+        updateUnitLabel(((JMenuItem)eventTarget));
+      else
+        resetUnitMenuFlags();
     } catch (NumberFormatException formatEx) {
       System.err.println(formatEx.getMessage());
       shouldReset = true;
