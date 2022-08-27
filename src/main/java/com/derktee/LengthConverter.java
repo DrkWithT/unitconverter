@@ -5,7 +5,6 @@ package com.derktee;
  * Methods of this object not only initialize its data, but also set units, determine units and conversion "directions", and do the calculations.
  * NOTE: Unit Relation Graph below!
  * km, dm, cm, mm <-> m <-> ft <-> mi, yd, in
- * TODO: add dropdown menus for setting start and end unit names!
  */
 
 import java.util.HashMap;
@@ -19,12 +18,12 @@ public class LengthConverter {
   private double startValue;
 
   /**
-   * A mapping going from metric meters to other metric lengths. The graph modeled by this represents conversion routes from meters to any other metric length unit.
+   * A mapping going from Metric meters to other metric lengths. The graph modeled by this represents conversion routes from meters to any other metric length unit.
    */
   private HashMap<String, Double> metricMap;
 
   /**
-   * Similar mapping for Imperial unit relations: feet to any other imperial length. Note that to convert from metric to imperial or vice versa, cross conversions must use the meter-ft relation. That relation uses the METERS_TO_FT factor for meters to feet!
+   * A mapping going from Imperial feet to any other imperial length. Note that to convert from metric to imperial or vice versa, cross conversions must use the <code>METERS_TO_FT</code> constant. Direction of the cross convert affects if the constant itself or its reciprocal is used.
    */
   private HashMap<String, Double> imperialMap;
 
