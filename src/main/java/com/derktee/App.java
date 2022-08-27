@@ -27,7 +27,10 @@ public class App extends JFrame implements ActionListener {
   private static final String DEFAULT_UNIT = "m";
   private static final String[] UNIT_NAMES = {"m", "km", "dm", "cm", "mm", "ft", "mi", "yd", "in"};
 
-  // GUI objects
+  // state
+  private boolean[] menuUsageFlags;
+
+  // GUI
   private JLabel sourceUnitLabel;
   private JLabel targetUnitLabel;
   private JTextField sourceUnitField;
@@ -45,11 +48,16 @@ public class App extends JFrame implements ActionListener {
   private JMenu targetUnitMenu;
   private JMenuItem[] targetUnitItems;
 
-  // other objects
+  // others
   private DecimalFormat numFormatter;
   private LengthConverter unitConverter;
 
   public App() {
+    // initialize state
+    menuUsageFlags = new boolean[2];
+    menuUsageFlags[0] = false;
+    menuUsageFlags[1] = false;
+
     // initialize form components
     sourceUnitLabel = new JLabel("m");
     sourceUnitField = new JTextField("0.0");
@@ -123,12 +131,23 @@ public class App extends JFrame implements ActionListener {
     setVisible(true);
   }
 
+  private boolean isUsingUnitMenu(int menuNumber) {
+    if (menuNumber >= 0 && menuNumber < menuUsageFlags.length)
+      return menuUsageFlags[menuNumber];
+    
+    return false;
+  }
+
+  private void toggleUnitMenuFlag(int menuNumber) {
+    if (menuNumber >= 0 && menuNumber < menuUsageFlags.length)
+      menuUsageFlags[menuNumber] = !menuUsageFlags[menuNumber];
+  }
+
   /**
    * This is a helper method for validation prior to calculations!
-   * @implSpec The inputs must be non-negative double literals.
+   * @implSpec The inputs must be non-negative decimal literals.
    */
   private boolean areValuesValid() {
-    // todo: check if the unit numbers are in a valid range > 0.0
     return sourceUnitField.getText().charAt(0) != '-' && targetUnitField.getText().charAt(0) != '-';
   }
 
@@ -167,7 +186,7 @@ public class App extends JFrame implements ActionListener {
       else if (eventTarget == resetItem)
         resetValues();
       else if (eventTarget.getClass().getName() == "javax.swing.JMenuItem")
-        ; // TODO: implement unit setter logic!
+        ;
     } catch (NumberFormatException formatEx) {
       System.err.println(formatEx.getMessage());
       shouldReset = true;
