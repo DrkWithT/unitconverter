@@ -170,6 +170,9 @@ public class App extends JFrame implements ActionListener {
   }
 
   private void convertValues() throws NumberFormatException, Exception {
+    // reset menu usage flags for next conversion by user
+    resetUnitMenuFlags();
+
     unitConverter.setUnits(sourceUnitLabel.getText(), targetUnitLabel.getText());
     
     if (!areValuesValid())
@@ -184,6 +187,8 @@ public class App extends JFrame implements ActionListener {
   }
 
   private void resetValues() {
+    resetUnitMenuFlags();
+
     // reset converter state
     unitConverter.defaultData();
 
