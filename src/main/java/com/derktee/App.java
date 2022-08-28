@@ -151,34 +151,11 @@ public class App extends JFrame implements ActionListener {
     menuUsageFlags[1] = false;
   }
 
-  private String findMenuItemText(int menuNumber, JMenuItem unitItem) {
-    String sourceText = unitItem.getText();
-    String targetText = "";
-
-    if (menuNumber == UNIT_MENU_1) {
-      for (int i = 0; i < UNIT_COUNT; i++) {
-        targetText = sourceUnitItems[i].getText();
-
-        if (targetText == sourceText)
-          break;
-      }
-    } else if (menuNumber == UNIT_MENU_2) {
-      for (int i = 0; i < UNIT_COUNT; i++) {
-        targetText = targetUnitItems[i].getText();
-        
-        if (targetText == sourceText)
-          break;
-      }
-    }
-
-    return targetText;
-  }
-
   private void updateUnitLabel(JMenuItem unitItem) {
     if (isUsingUnitMenu(UNIT_MENU_1)) {
-      sourceUnitLabel.setText(findMenuItemText(UNIT_MENU_1, unitItem));
+      sourceUnitLabel.setText(unitItem.getText());
     } else if (isUsingUnitMenu(UNIT_MENU_2)) {
-      targetUnitLabel.setText(findMenuItemText(UNIT_MENU_2, unitItem));
+      targetUnitLabel.setText(unitItem.getText());
     }
 
     resetUnitMenuFlags();
