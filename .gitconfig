@@ -1,3 +1,8 @@
+# gitconfig for my "Unit Converter"
+# Derek Tan
+
 # treat compiled java files as binary
-# *.class binary
+*.class binary
 *.jar binary
+
+# NOTE: I could not get the previously tracked .class files untracked, even with specific commands. No need to change the bytecode inside them anyways!
