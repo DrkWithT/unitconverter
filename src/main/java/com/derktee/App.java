@@ -18,7 +18,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 public class App extends JFrame implements ActionListener {
-  // Constants
+  /// Constants
   private static final int WINDOW_WIDTH = 320;
   private static final int WINDOW_HEIGHT = 320;
   private static final String WINDOW_TITLE = "UnitConverter";
@@ -30,10 +30,10 @@ public class App extends JFrame implements ActionListener {
   private static final int UNIT_MENU_1 = 0;
   private static final int UNIT_MENU_2 = 1;
 
-  // state
+  /// State
   private boolean[] menuUsageFlags;
 
-  // GUI
+  /// GUI
   private JLabel sourceUnitLabel;
   private JLabel targetUnitLabel;
   private JTextField sourceUnitField;
@@ -51,12 +51,12 @@ public class App extends JFrame implements ActionListener {
   private JMenu targetUnitMenu;
   private JMenuItem[] targetUnitItems;
 
-  // others
+  /// Other
   private DecimalFormat numFormatter;
   private LengthConverter unitConverter;
 
   public App() {
-    // initialize state
+    // initialize menu selection flags
     menuUsageFlags = new boolean[2];
     menuUsageFlags[UNIT_MENU_1] = false;
     menuUsageFlags[UNIT_MENU_2] = false;
@@ -105,7 +105,7 @@ public class App extends JFrame implements ActionListener {
   }
 
   private void setupApp() {
-    // 1a. populate and setup GUI layout
+    // 1a. setup GUI layout: put menus and form
     setJMenuBar(appMenus);
     
     add(sourceUnitLabel);
@@ -115,7 +115,7 @@ public class App extends JFrame implements ActionListener {
     
     setLayout(new GridLayout(2, 2, 10, 10));
 
-    // 1b. setup listeners
+    // 1b. setup listeners: add menu event handlers
     calcItem.addActionListener(this);
     resetItem.addActionListener(this);
 
@@ -124,7 +124,7 @@ public class App extends JFrame implements ActionListener {
       targetUnitItems[i].addActionListener(this);
     }
 
-    // 2. prepare window
+    // 2. prepare window: closing operation and appearance
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     setTitle(WINDOW_TITLE);
@@ -213,7 +213,7 @@ public class App extends JFrame implements ActionListener {
       else if (eventTarget == targetUnitMenu)
         toggleUnitMenuFlag(UNIT_MENU_2);
       else if (eventTarget.getClass().getName() == "javax.swing.JMenuItem")
-        updateUnitLabel(((JMenuItem)eventTarget));
+        updateUnitLabel(((JMenuItem)eventTarget)); // other menu items will set either the start or end convert unit
       else
         resetUnitMenuFlags();
     } catch (NumberFormatException formatEx) {
