@@ -12,10 +12,10 @@ import java.util.HashMap;
 public class LengthConverter {
   private static final double METERS_TO_FT = 3.28084;
 
-  private String fallbackUnit;
-  private String startUnit;
-  private String endUnit;
-  private double startValue;
+  private String fallbackUnit; // default unit on reset
+  private String startUnit;    // unit to convert from
+  private String endUnit;      // unit to convert to
+  private double startValue;   // initial measurement to convert
 
   /**
    * A mapping going from Metric meters to other metric lengths. The graph modeled by this represents conversion routes from meters to any other metric length unit.
@@ -28,6 +28,10 @@ public class LengthConverter {
   private HashMap<String, Double> imperialMap;
 
   public LengthConverter(String defaultUnit) {
+    // set preset unit for both conversion values
+    fallbackUnit = defaultUnit;
+
+    // default other fields
     defaultData();
 
     // initialize metric scale: based on meters
