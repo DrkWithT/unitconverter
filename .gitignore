@@ -1,4 +1,4 @@
 # ignore intermediate JVM bytecode in .class files
 
-./target/classes/com/derktee/*.class
-./target/test-classes/com/derktee/*.class
+target/classes/com/derktee/*.class
+target/test-classes/com/derktee/*.class
