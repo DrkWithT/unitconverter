@@ -1,4 +1,7 @@
-# ignore intermediate JVM bytecode in .class files
+# gitignore for my "Unit Converter"
+# By: Derek Tan
+
+# NOTE: I could not get the previously tracked .class files untracked, even with specific commands. No need to change the bytecode inside them anyways!
 
 target/classes/com/derktee/*.class
 target/test-classes/com/derktee/*.class
