@@ -98,7 +98,7 @@ public class App extends JFrame implements ActionListener {
     appMenus.add(targetUnitMenu);
 
     // initialize other objects
-    numFormatter = new DecimalFormat(".0000");
+    numFormatter = new DecimalFormat("%.3f");
     unitConverter = new LengthConverter(DEFAULT_UNIT);
 
     setupApp();
