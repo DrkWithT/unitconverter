@@ -3,7 +3,7 @@ package com.derktee;
 /**
  * Unit Converter
  * @author Derek Tan
- * @version 0.1.0
+ * @version 0.1.10 Fixed cross convert bug between metric and imperial.
  */
 
 import java.awt.*;
