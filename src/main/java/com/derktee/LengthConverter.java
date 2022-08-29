@@ -110,7 +110,7 @@ public class LengthConverter {
     boolean startInImp = imperialMap.containsKey(startUnit);
     boolean endInImp = imperialMap.containsKey(endUnit);
     boolean startInMet = metricMap.containsKey(startUnit);
-    boolean endInMet = imperialMap.containsKey(endUnit);
+    boolean endInMet = metricMap.containsKey(endUnit);
 
     if (startInImp && endInMet) // conversion cases across systems
       return convImpToMetric();
