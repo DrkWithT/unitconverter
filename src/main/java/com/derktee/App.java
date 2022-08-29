@@ -8,7 +8,6 @@ package com.derktee;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.text.DecimalFormat;
 
 import javax.swing.JTextField;
 import javax.swing.JFrame;
@@ -27,11 +26,14 @@ public class App extends JFrame implements ActionListener {
   private static final String DEFAULT_UNIT = "m";
   private static final String[] UNIT_NAMES = {"m", "km", "dm", "cm", "mm", "ft", "mi", "yd", "in"};
 
-  private static final int UNIT_MENU_1 = 0;
-  private static final int UNIT_MENU_2 = 1;
+  private static final String CALC_BTN_LABEL = "calcbtn";
+  private static final String RESET_BTN_LABEL = "resetbtn";
+  private static final String SOURCE_UNIT_LABEL = "sourceunit";
+  private static final String TARGET_UNIT_LABEL = "targetunit";
 
-  /// State
-  private boolean[] menuUsageFlags;
+  private static final int SOURCE_UNIT_MENU = 0;
+  private static final int TARGET_UNIT_MENU = 1;
+  private static final int OTHER_MENU = 2;
 
   /// GUI
   private JLabel sourceUnitLabel;
@@ -52,15 +54,9 @@ public class App extends JFrame implements ActionListener {
   private JMenuItem[] targetUnitItems;
 
   /// Other
-  private DecimalFormat numFormatter;
   private LengthConverter unitConverter;
 
   public App() {
-    // initialize menu selection flags
-    menuUsageFlags = new boolean[2];
-    menuUsageFlags[UNIT_MENU_1] = false;
-    menuUsageFlags[UNIT_MENU_2] = false;
-
     // initialize form components
     sourceUnitLabel = new JLabel("m");
     sourceUnitField = new JTextField("0.0");
@@ -73,8 +69,11 @@ public class App extends JFrame implements ActionListener {
 
     actionMenu = new JMenu("Actions");
     calcItem = new JMenuItem("Convert");
+    calcItem.setName(CALC_BTN_LABEL);
+
     resetItem = new JMenuItem("Clear");
-    
+    resetItem.setName(RESET_BTN_LABEL);
+
     actionMenu.add(calcItem);
     actionMenu.add(resetItem);
 
@@ -85,10 +84,13 @@ public class App extends JFrame implements ActionListener {
     targetUnitItems = new JMenuItem[UNIT_COUNT];
 
     for(int i = 0; i < UNIT_COUNT; i++) {
+      // create named menu items to discern the calculate / clear vs. unit JMenuItems!
       sourceUnitItems[i] = new JMenuItem(UNIT_NAMES[i]);
+      sourceUnitItems[i].setName(SOURCE_UNIT_LABEL);
       sourceUnitMenu.add(sourceUnitItems[i]);
 
       targetUnitItems[i] = new JMenuItem(UNIT_NAMES[i]);
+      targetUnitItems[i].setName(TARGET_UNIT_LABEL);
       targetUnitMenu.add(targetUnitItems[i]);
     }
 
@@ -98,7 +100,6 @@ public class App extends JFrame implements ActionListener {
     appMenus.add(targetUnitMenu);
 
     // initialize other objects
-    numFormatter = new DecimalFormat("%.3f");
     unitConverter = new LengthConverter(DEFAULT_UNIT);
 
     setupApp();
@@ -116,6 +117,10 @@ public class App extends JFrame implements ActionListener {
     setLayout(new GridLayout(2, 2, 10, 10));
 
     // 1b. setup listeners: add menu event handlers
+    actionMenu.addActionListener(this);
+    sourceUnitMenu.addActionListener(this);
+    targetUnitMenu.addActionListener(this);
+
     calcItem.addActionListener(this);
     resetItem.addActionListener(this);
 
@@ -134,33 +139,6 @@ public class App extends JFrame implements ActionListener {
     setVisible(true);
   }
 
-  private boolean isUsingUnitMenu(int menuNumber) {
-    if (menuNumber >= 0 && menuNumber < menuUsageFlags.length)
-      return menuUsageFlags[menuNumber];
-    
-    return false;
-  }
-
-  private void toggleUnitMenuFlag(int menuNumber) {
-    if (menuNumber >= 0 && menuNumber < menuUsageFlags.length)
-      menuUsageFlags[menuNumber] = !menuUsageFlags[menuNumber];
-  }
-
-  private void resetUnitMenuFlags() {
-    menuUsageFlags[0] = false;
-    menuUsageFlags[1] = false;
-  }
-
-  private void updateUnitLabel(JMenuItem unitItem) {
-    if (isUsingUnitMenu(UNIT_MENU_1)) {
-      sourceUnitLabel.setText(unitItem.getText());
-    } else if (isUsingUnitMenu(UNIT_MENU_2)) {
-      targetUnitLabel.setText(unitItem.getText());
-    }
-
-    resetUnitMenuFlags();
-  }
-
   /**
    * This is a helper method for validation prior to calculations!
    * @implSpec The inputs must be non-negative decimal literals.
@@ -170,25 +148,21 @@ public class App extends JFrame implements ActionListener {
   }
 
   private void convertValues() throws NumberFormatException, Exception {
-    // reset menu usage flags for next conversion by user
-    resetUnitMenuFlags();
-
-    unitConverter.setUnits(sourceUnitLabel.getText(), targetUnitLabel.getText());
-    
     if (!areValuesValid())
       throw new Exception("Invalid lengths. Cannot have negatives.");
 
+    unitConverter.setUnits(sourceUnitLabel.getText(), targetUnitLabel.getText());
+
     double sourceValue = Double.parseDouble(sourceUnitField.getText());
-    
     unitConverter.setStartValue(sourceValue);
 
     double result = unitConverter.getConversion();
-    targetUnitField.setText(numFormatter.format(result));
+    targetUnitField.setText(String.format("%.3f", result));
+
+    unitConverter.defaultData();
   }
 
   private void resetValues() {
-    resetUnitMenuFlags();
-
     // reset converter state
     unitConverter.defaultData();
 
@@ -199,23 +173,47 @@ public class App extends JFrame implements ActionListener {
     targetUnitField.setText("0.0");
   }
 
+  private int getMenuUsed(JMenuItem item) {
+    String componentName = item.getName();
+
+    if (componentName.compareTo(SOURCE_UNIT_LABEL) == 0)
+      return SOURCE_UNIT_MENU;
+    else if (componentName.compareTo(TARGET_UNIT_LABEL) == 0) 
+      return TARGET_UNIT_MENU;
+
+    return OTHER_MENU;
+  }
+
+  private void updateUnitData(JMenuItem item) {
+    switch (getMenuUsed(item)) {
+      case SOURCE_UNIT_MENU:
+        sourceUnitLabel.setText(item.getText());
+        break;
+      case TARGET_UNIT_MENU:
+        targetUnitLabel.setText(item.getText());
+        break;
+      case OTHER_MENU:
+      default:
+        break;
+    }
+  }
+
+  public void handleMenuItemUse(JMenuItem target) throws NumberFormatException, Exception {
+    if (target == calcItem)
+      convertValues();
+    else if (target == resetItem)
+      resetValues();
+    else
+      updateUnitData(target);
+  }
+
   public void actionPerformed(ActionEvent e) {
     Object eventTarget = e.getSource();
     boolean shouldReset = false;
 
     try {
-      if (eventTarget == calcItem)
-        convertValues();
-      else if (eventTarget == resetItem)
-        resetValues();
-      else if (eventTarget == sourceUnitMenu)
-        toggleUnitMenuFlag(UNIT_MENU_1);
-      else if (eventTarget == targetUnitMenu)
-        toggleUnitMenuFlag(UNIT_MENU_2);
-      else if (eventTarget.getClass().getName() == "javax.swing.JMenuItem")
-        updateUnitLabel(((JMenuItem)eventTarget)); // other menu items will set either the start or end convert unit
-      else
-        resetUnitMenuFlags();
+      if (eventTarget instanceof JMenuItem)
+        handleMenuItemUse((JMenuItem)eventTarget);
     } catch (NumberFormatException formatEx) {
       System.err.println(formatEx.getMessage());
       shouldReset = true;
