@@ -9,3 +9,7 @@
 
 ### Summary:
 This is a simple length unit converter but with a twist: _no_ if else chains for all specific conversions! I have made this not only to fill my GitHub as an unofficial portfolio, but also to review some good old Java.
+
+### TODO:
+ 1. Add more Metric and Imperial units?
+ 2. Add history for quick re-entry of common conversions.
