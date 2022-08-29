@@ -66,43 +66,51 @@ public class LengthConverter {
   }
 
   private double convImpToMetric() {
-    double toFeet = startValue * imperialMap.get(startUnit);
+    double startFactor = metricMap.get(startUnit);
+    double endFactor = metricMap.get(endUnit);
+
+    double toFeet = startValue * startFactor;
     double toMeters = toFeet * (1.0 / METERS_TO_FT);
-    return toMeters * metricMap.get(endUnit);
+
+    if (startFactor < endFactor)
+      return toMeters / endFactor;
+    
+    return toMeters * endFactor;
   }
 
   private double convMetricToImp() {
-    double toMeters = startValue * metricMap.get(startUnit);
+    double startFactor = metricMap.get(startUnit);
+    double endFactor = metricMap.get(endUnit);
+
+    double toMeters = startValue * startFactor;
     double toFeet = toMeters * METERS_TO_FT;
-    return toFeet * imperialMap.get(endUnit);
+
+    if (startFactor < endFactor)
+      return toFeet / endFactor;
+    
+    return toFeet * endFactor;
   }
 
   private double convertInMetric() {
     double startFactor = metricMap.get(startUnit);
     double endFactor = metricMap.get(endUnit);
     double toMeters = startValue * startFactor;
-    double result = 0.0;
 
     if (startFactor < endFactor)
-      result = toMeters / endFactor;
-    else
-      result = toMeters * endFactor;
+      return toMeters / endFactor;
     
-    return result;
+    return toMeters * endFactor;
   }
 
   private double convertInImperial() {
     double startFactor = imperialMap.get(startUnit);
     double endFactor = imperialMap.get(endUnit);
     double toFeet = startValue * startFactor;
-    double result = 0.0;
 
     if (startFactor < endFactor)
-      result = toFeet / endFactor;
-    else
-      result = toFeet * endFactor;
+      return toFeet / endFactor;
     
-    return result;
+    return toFeet * endFactor;
   }
 
   public double getConversion() {
