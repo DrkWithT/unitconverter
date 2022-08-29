@@ -10,7 +10,7 @@ package com.derktee;
 import java.util.HashMap;
 
 public class LengthConverter {
-  private static final double METERS_TO_FT = 3.28084;
+  private static final double METERS_TO_FT = 3.28084; // factor to relate metric to imperial
 
   private String fallbackUnit; // default unit on reset
   private String startUnit;    // unit to convert from
@@ -66,29 +66,23 @@ public class LengthConverter {
   }
 
   private double convImpToMetric() {
-    double startFactor = metricMap.get(startUnit);
+    double startFactor = imperialMap.get(startUnit);
     double endFactor = metricMap.get(endUnit);
 
     double toFeet = startValue * startFactor;
     double toMeters = toFeet * (1.0 / METERS_TO_FT);
 
-    if (startFactor < endFactor)
-      return toMeters / endFactor;
-    
-    return toMeters * endFactor;
+    return toMeters / endFactor;
   }
 
   private double convMetricToImp() {
     double startFactor = metricMap.get(startUnit);
-    double endFactor = metricMap.get(endUnit);
+    double endFactor = imperialMap.get(endUnit);
 
     double toMeters = startValue * startFactor;
     double toFeet = toMeters * METERS_TO_FT;
 
-    if (startFactor < endFactor)
-      return toFeet / endFactor;
-    
-    return toFeet * endFactor;
+    return toFeet / endFactor;
   }
 
   private double convertInMetric() {
