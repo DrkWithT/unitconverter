@@ -35,6 +35,7 @@ public class LengthConverter {
     defaultData();
 
     // initialize metric scale: based on meters
+    metricMap = new HashMap<>();
     metricMap.put("m", 1.0);
     metricMap.put("km", 1000.0);
     metricMap.put("dm", 0.1);
@@ -42,6 +43,7 @@ public class LengthConverter {
     metricMap.put("mm", 0.001);
 
     // initalize imperial scale: based on feet
+    imperialMap = new HashMap<>();
     imperialMap.put("ft", 1.0);
     imperialMap.put("mi", 5280.0);
     imperialMap.put("yd", 3.0);
