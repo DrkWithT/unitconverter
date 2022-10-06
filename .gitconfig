@@ -1,6 +1,0 @@
-# gitconfig for my "Unit Converter"
-# Derek Tan
-
-# treat compiled java files as binary
-*.class binary
-*.jar binary

@@ -1,0 +1,16 @@
+# gitattributes for my "Unit Converter"
+# Derek Tan
+
+# auto setup endlines
+text=auto
+
+# treat java and xml files as text
+pom.xml text
+*.xml text
+src/main/java/com/derktee/*.java text
+src/test/java/com/derktee/*.java text
+
+# treat compiled java files as binary
+target/classes/com/derktee/*.class binary
+target/test-classes/com/derktee/*.class binary
+*.jar binary
