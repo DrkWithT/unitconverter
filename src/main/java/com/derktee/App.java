@@ -251,12 +251,13 @@ public class App extends JFrame implements ActionListener {
         handleMenuItemUse((JMenuItem)eventTarget);
     } catch (NumberFormatException formatEx) {
       hasError = true;
-      caughtErrorMsg = formatEx.getMessage();
+      caughtErrorMsg = "Invalid input. Must be a positive decimal!";
+      System.err.println(formatEx);
 
     } catch (Exception ex) {
       hasError = true;
       caughtErrorMsg = ex.getMessage();
-
+      System.err.println(ex);
     } finally {
       if (hasError) {
         resetValues(); // clear bad inputs that caused conversion and formatting errors!
