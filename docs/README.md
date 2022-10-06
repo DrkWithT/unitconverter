@@ -16,5 +16,8 @@
 ### Info:
 This is a simple length unit converter without long `if else` chains! I have made this not only to fill my GitHub as an unofficial portfolio, but also to review some good old Java. The code is commented and well named for clarity. Feel free to fork or change code, but please credit me as the original programmer.
 
+### To Do List:
+ 1. Add error modals to tell the user about bad input values.
+
 ### Version History:
  - `0.1.10`: Fixed cross convert bug between metric and imperial.
