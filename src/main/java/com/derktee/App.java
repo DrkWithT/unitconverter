@@ -1,9 +1,10 @@
 package com.derktee;
 
 /**
+ * App.java
  * Unit Converter
  * @author Derek Tan
- * @version 0.1.10 Fixed cross convert bug between metric and imperial.
+ * @version 0.1.10 See README.md for history of changes.
  */
 
 import java.awt.*;
@@ -56,6 +57,9 @@ public class App extends JFrame implements ActionListener {
   /// Other
   private LengthConverter unitConverter;
 
+  /**
+   * Initializes the application data.
+   */
   public App() {
     // initialize form components
     sourceUnitLabel = new JLabel("m");
@@ -105,6 +109,9 @@ public class App extends JFrame implements ActionListener {
     setupApp();
   }
 
+  /**
+   * Sets up the application's GUI.
+   */
   private void setupApp() {
     // 1a. setup GUI layout: put menus and form
     setJMenuBar(appMenus);
@@ -141,12 +148,17 @@ public class App extends JFrame implements ActionListener {
 
   /**
    * This is a helper method for validation prior to calculations!
-   * @implSpec The inputs must be non-negative decimal literals.
+   * @note The inputs must be non-negative decimal literals.
    */
   private boolean areValuesValid() {
     return sourceUnitField.getText().charAt(0) != '-' && targetUnitField.getText().charAt(0) != '-';
   }
 
+  /**
+   * Invokes the LengthConverter object within App to convert units.
+   * @throws NumberFormatException Thrown previously from <code>LengthConverter.getConversion()</code>.
+   * @throws Exception A general runtime error.
+   */
   private void convertValues() throws NumberFormatException, Exception {
     if (!areValuesValid())
       throw new Exception("Invalid lengths. Cannot have negatives.");
@@ -173,6 +185,11 @@ public class App extends JFrame implements ActionListener {
     targetUnitField.setText("0.0");
   }
 
+  /**
+   * Returns the active menu based on the name attributes of any clicked JMenuItem.
+   * @param item The focused <code>JMenuItem</code>.
+   * @return An int for the menu code. See "Constants" in <strong>App.java</strong>.
+   */
   private int getMenuUsed(JMenuItem item) {
     String componentName = item.getName();
 
@@ -184,6 +201,10 @@ public class App extends JFrame implements ActionListener {
     return OTHER_MENU;
   }
 
+  /**
+   * Updates the initial or target unit for the conversion based on which menu is active.
+   * @param item The focused <code>JMenuItem</code>.
+   */
   private void updateUnitData(JMenuItem item) {
     switch (getMenuUsed(item)) {
       case SOURCE_UNIT_MENU:
@@ -198,6 +219,12 @@ public class App extends JFrame implements ActionListener {
     }
   }
 
+  /**
+   * The main helper method to handle the calculate, reset, and unit menu item uses.
+   * @param target The currently focused menu item.
+   * @throws NumberFormatException From method <code>convertValues()</code>.
+   * @throws Exception A general runtimne error.
+   */
   public void handleMenuItemUse(JMenuItem target) throws NumberFormatException, Exception {
     if (target == calcItem)
       convertValues();
