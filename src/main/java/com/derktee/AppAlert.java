@@ -2,6 +2,7 @@ package com.derktee;
 
 import java.awt.FlowLayout;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 /**
@@ -11,13 +12,15 @@ public class AppAlert extends JDialog {
   private static int DEFAULT_WIDTH = 250;
   private static int DEFAULT_HEIGHT = 250;
 
+  private static String DEFAULT_ALERT_TITLE = "Alert";
   private static String DEFAULT_ALERT_MSG = "No exceptions!"; // fallback alert message for testing?
 
   private String alertMessage;
 
   private JLabel alertText;
 
-  public AppAlert() {
+  public AppAlert(JFrame owner) {
+    super(owner, DEFAULT_ALERT_TITLE, true);
     alertMessage = DEFAULT_ALERT_MSG;
     alertText = new JLabel(alertMessage);
 
@@ -30,7 +33,6 @@ public class AppAlert extends JDialog {
     setDefaultCloseOperation(HIDE_ON_CLOSE);
     setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     setResizable(false);
-    setTitle("Alert");
   }
 
   public void setAlertMsg(String msg) {
