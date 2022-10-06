@@ -55,6 +55,7 @@ public class App extends JFrame implements ActionListener {
   private JMenuItem[] targetUnitItems;
 
   /// Other
+  private AppAlert errorAlert;
   private LengthConverter unitConverter;
 
   /**
@@ -104,6 +105,7 @@ public class App extends JFrame implements ActionListener {
     appMenus.add(targetUnitMenu);
 
     // initialize other objects
+    errorAlert = new AppAlert(this);
     unitConverter = new LengthConverter(DEFAULT_UNIT);
 
     setupApp();
@@ -156,7 +158,7 @@ public class App extends JFrame implements ActionListener {
 
   /**
    * Invokes the LengthConverter object within App to convert units.
-   * @throws NumberFormatException Thrown previously from <code>LengthConverter.getConversion()</code>.
+   * @throws NumberFormatException Thrown previously from parseDouble.
    * @throws Exception A general runtime error.
    */
   private void convertValues() throws NumberFormatException, Exception {
@@ -234,24 +236,32 @@ public class App extends JFrame implements ActionListener {
       updateUnitData(target);
   }
 
+  public void openAlert(String errMsg) {
+    errorAlert.setAlertMsg(errMsg);
+    errorAlert.setVisible(true);
+  }
+
   public void actionPerformed(ActionEvent e) {
     Object eventTarget = e.getSource();
-    boolean shouldReset = false;
+    String caughtErrorMsg = null;
+    boolean hasError = false;
 
     try {
       if (eventTarget instanceof JMenuItem)
         handleMenuItemUse((JMenuItem)eventTarget);
     } catch (NumberFormatException formatEx) {
-      System.err.println(formatEx.getMessage());
-      shouldReset = true;
+      hasError = true;
+      caughtErrorMsg = formatEx.getMessage();
 
     } catch (Exception ex) {
-      System.err.println(ex.getMessage());
-      shouldReset = true;
+      hasError = true;
+      caughtErrorMsg = ex.getMessage();
 
     } finally {
-      if (shouldReset)
-        resetValues(); // clear bad inputs on any error within conversion and formatting!
+      if (hasError) {
+        resetValues(); // clear bad inputs that caused conversion and formatting errors!
+        openAlert(caughtErrorMsg);
+      }
     }
   }
 
